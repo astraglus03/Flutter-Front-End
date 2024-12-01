@@ -2,7 +2,7 @@ import 'package:dimple/chatbot/view/chatbot_screen.dart';
 import 'package:dimple/common/view/root_tab.dart';
 import 'package:dimple/common/view/splash_screen.dart';
 import 'package:dimple/dashboard/view/dash_board_screen.dart';
-import 'package:dimple/map/view/map_screen.dart';
+import 'package:dimple/map/view/map_page.dart';
 import 'package:dimple/social/view/social_screen.dart';
 import 'package:dimple/user/model/user_model.dart';
 import 'package:dimple/user/view/login_screen.dart';

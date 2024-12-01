@@ -24,7 +24,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       body: Center(
         child: Column(
           children: [
-            SizedBox(height: 177,),
+            const SizedBox(height: 177,),
             Container(
               child: Column(
                 children: [
@@ -32,13 +32,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 ],
               ),
             ),
-            SizedBox(height: 181,),
+            const SizedBox(height: 181,),
             GestureDetector(child: Image.asset('assets/img/male_icon.png',  width: 336, height: 56,),
               onTap: state is UserModelLoading ? null : () async{
               ref.read(userMeProvider.notifier).login(clientId: clientId, redirectUri: redirectUri,kaKaoAuthUrl: kaKaoAuthUrl);
               }
             ),
-            SizedBox(height: 18,),
+            const SizedBox(height: 18,),
             GestureDetector(child: Image.asset('assets/img/female_icon.png',  width: 336, height: 56,),
                 onTap: state is UserModelLoading ? null : () async{
                   ref.read(userMeProvider.notifier).login(clientId: clientId, redirectUri: redirectUri,kaKaoAuthUrl: kaKaoAuthUrl);
