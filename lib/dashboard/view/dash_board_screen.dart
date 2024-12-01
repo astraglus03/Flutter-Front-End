@@ -1,3 +1,4 @@
+import 'package:dimple/calendar/view/calendar_screen.dart';
 import 'package:dimple/common/const/colors.dart';
 import 'package:dimple/common/layout/default_layout.dart';
 import 'package:dimple/common/utils/data_utils.dart';
@@ -7,7 +8,6 @@ import 'package:dimple/dashboard/component/dashboard_petInfo_container.dart';
 import 'package:dimple/dashboard/view/food_range_screen.dart';
 import 'package:dimple/dashboard/view/moved_distance_detail_screen.dart';
 import 'package:dimple/dashboard/view/pupu_detail_screen.dart';
-import 'package:dimple/solution/view/solution_calendar_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_flip_card/flutter_flip_card.dart';
@@ -400,7 +400,7 @@ SliverPadding RowAddMemoAndAllResponse(BuildContext context) {
             child: DashboardContainer(
               title: '생리 추적',
               onTap: () {
-                pushScreenWithNavBar(context, SolutionCalendarScreen());
+                pushScreenWithNavBar(context, CalendarScreen());
               },
               child: Center(
                 child: Text(

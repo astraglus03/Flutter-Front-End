@@ -1125,7 +1125,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.0.2"
-
   photo_view:
     dependency: transitive
     description:
@@ -1134,7 +1133,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.15.0"
-
   platform:
     dependency: transitive
     description:
@@ -1239,7 +1237,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.28.0"
-
+  sanitize_html:
+    dependency: transitive
+    description:
+      name: sanitize_html
+      sha256: "12669c4a913688a26555323fb9cec373d8f9fbe091f2d01c40c723b33caa8989"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.1.0"
   scroll_to_index:
     dependency: transitive
     description:
@@ -1304,16 +1309,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.4.1"
-
-  sanitize_html:
-    dependency: transitive
-    description:
-      name: sanitize_html
-      sha256: "12669c4a913688a26555323fb9cec373d8f9fbe091f2d01c40c723b33caa8989"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.1.0"
-
   shelf:
     dependency: transitive
     description:
@@ -1471,7 +1466,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.3.0+3"
-
   table_calendar:
     dependency: "direct main"
     description:
