@@ -1,5 +1,6 @@
 import 'package:dimple/common/view/root_tab.dart';
 import 'package:dimple/common/view_model/go_router.dart';
+import 'package:dimple/user/view/dog_register_screen1.dart';
 import 'package:dimple/user/view/menstruation_detail_screen1.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -32,7 +33,7 @@ class MyApp extends ConsumerWidget {
     //   );
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: MenstruationDetailScreen1(),
+      home: RootTab(),
     );
   }
 }

@@ -29,9 +29,9 @@ class _DogRegisterScreen2State extends State<DogRegisterScreen2> {
           ListView(
             keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
             children: [
-              const SizedBox(height: 30.0),
+              const SizedBox(height: 50.0),
               _buildImagePicker(),
-              const SizedBox(height: 10.0),
+              const SizedBox(height: 20.0),
               _buildBasicInfoRow(),
               const SizedBox(height: 10.0),
             ],
@@ -45,6 +45,7 @@ class _DogRegisterScreen2State extends State<DogRegisterScreen2> {
                 child: SubmitButton(
                   text: '완료',
                   onPressed: () {
+                    // TODO: 반려견 등록 api 연동하기 + RootTab으로 가기.
                     // Navigator.of(context).push(MaterialPageRoute(builder: (_) => MenstruationDetailScreen2()));
                   },
                 ),

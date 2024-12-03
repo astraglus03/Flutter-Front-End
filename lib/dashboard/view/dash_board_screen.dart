@@ -2,12 +2,12 @@ import 'package:dimple/calendar/view/calendar_screen.dart';
 import 'package:dimple/common/const/colors.dart';
 import 'package:dimple/common/layout/default_layout.dart';
 import 'package:dimple/common/utils/data_utils.dart';
-import 'package:dimple/dashboard/add_newpet_screen.dart';
 import 'package:dimple/dashboard/component/dashboard_container.dart';
 import 'package:dimple/dashboard/component/dashboard_petInfo_container.dart';
 import 'package:dimple/dashboard/view/food_range_screen.dart';
 import 'package:dimple/dashboard/view/moved_distance_detail_screen.dart';
 import 'package:dimple/dashboard/view/pupu_detail_screen.dart';
+import 'package:dimple/user/view/dog_register_screen1.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_flip_card/flutter_flip_card.dart';
@@ -167,7 +167,7 @@ Widget _getMultiplePets(context) {
         backgroundColor: PRIMARY_COLOR,
         child: Icon(Icons.add),
         onTap: () {
-          pushScreenWithNavBar(context, AddNewPetScreen());
+          pushScreenWithoutNavBar(context, DogRegisterScreen1());
         },
       ),
     ],

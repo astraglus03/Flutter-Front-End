@@ -22,9 +22,16 @@ class _DogRegisterScreen1State extends State<DogRegisterScreen1> {
 
   final List<String> genderTypes = ['암컷', '수컷'];
   final List<String> neutralTypes = ['O', 'X'];
-  final List<String> dogTypes = [
-    '포메라니안', '푸들', '허스키', '말티즈', '시츄', '불독', '치와와', '골든리트리버','포메라니안', '푸들', '허스키', '말티즈', '시츄', '불독', '치와와', '골든리트리버','포메라니안', '푸들', '허스키', '말티즈', '시츄', '불독', '치와와', '골든리트리버','포메라니안', '푸들', '허스키', '말티즈', '시츄', '불독', '치와와', '골든리트리버'
-  ];
+  final List<String> dogTypes = ['포메라니안', '푸들', '허스키', '말티즈', '시츄', '불독', '치와와', '골든리트리버', '포메라니안', '푸들', '허스키', '말티즈', '시츄', '불독', '치와와', '골든리트리버', '포메라니안', '푸들', '허스키', '말티즈', '시츄', '불독', '치와와', '골든리트리버', '포메라니안', '푸들', '허스키', '말티즈', '시츄', '불독', '치와와', '골든리트리버'];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_){
+      _alertShowDialog();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,9 +41,11 @@ class _DogRegisterScreen1State extends State<DogRegisterScreen1> {
           ListView(
             keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
             children: [
-              const SizedBox(height: 30.0),
+              const SizedBox(
+                height: 50.0,
+              ),
               _buildImagePicker(),
-              const SizedBox(height: 10.0),
+              const SizedBox(height: 20.0),
               _buildBasicInfoRow(),
               const SizedBox(height: 10.0),
               _buildAdditionalInfoRow(),
@@ -51,13 +60,56 @@ class _DogRegisterScreen1State extends State<DogRegisterScreen1> {
               child: SubmitButton(
                 text: '다음',
                 onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(builder: (_) => DogRegisterScreen2()));
+                  Navigator.of(context).push(
+                      MaterialPageRoute(builder: (_) => DogRegisterScreen2()));
                 },
               ),
             ),
           ),
         ],
       ),
+    );
+  }
+
+  void _alertShowDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20.0),
+          ),
+          child: Container(
+            padding: EdgeInsets.all(20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(height: 60),
+                Text(
+                  '안녕하세요. 보조개입니다.',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                SizedBox(height: 50),
+                SubmitButton(
+                    text: '반려견 정보 입력하기',
+                    onPressed: (){
+                  Navigator.of(context).pop();
+                },
+                  width: MediaQuery.of(context).size.width * 0.5,
+                  fontSize: 14.0,
+                ),
+                SizedBox(height: 10),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -80,7 +132,8 @@ class _DogRegisterScreen1State extends State<DogRegisterScreen1> {
               radius: 50,
               backgroundImage: selectedImage != null
                   ? FileImage(File(selectedImage!.path))
-                  : const AssetImage('assets/img/runningDog.jpg') as ImageProvider,
+                  : const AssetImage('assets/img/runningDog.jpg')
+                      as ImageProvider,
             ),
           ),
           Positioned(
@@ -94,7 +147,8 @@ class _DogRegisterScreen1State extends State<DogRegisterScreen1> {
                 border: Border.all(color: Colors.white, width: 1),
               ),
               padding: const EdgeInsets.all(8),
-              child: const Icon(Icons.camera_alt, color: Colors.white, size: 15),
+              child:
+                  const Icon(Icons.camera_alt, color: Colors.white, size: 15),
             ),
           ),
         ],
@@ -106,11 +160,31 @@ class _DogRegisterScreen1State extends State<DogRegisterScreen1> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        CustomTextFormField(labelText: '',width: 310,hintText: '이름',height: 65,),
-        const SizedBox(height: 10.0,),
-        CustomTextFormField(labelText: '', isNumber: true,width: 310,hintText: '나이',height: 65,),
-        const SizedBox(height: 10.0,),
-        CustomTextFormField(labelText: '',width: 310,hintText: '몸무게',height: 65,),
+        CustomTextFormField(
+          labelText: '',
+          width: 310,
+          hintText: '이름',
+          height: 65,
+        ),
+        const SizedBox(
+          height: 10.0,
+        ),
+        CustomTextFormField(
+          labelText: '',
+          isNumber: true,
+          width: 310,
+          hintText: '나이',
+          height: 65,
+        ),
+        const SizedBox(
+          height: 10.0,
+        ),
+        CustomTextFormField(
+          labelText: '',
+          width: 310,
+          hintText: '몸무게',
+          height: 65,
+        ),
       ],
     );
   }
@@ -147,7 +221,9 @@ class _DogRegisterScreen1State extends State<DogRegisterScreen1> {
             ),
           ],
         ),
-        const SizedBox(height: 10.0,),
+        const SizedBox(
+          height: 10.0,
+        ),
         CustomDropdownFormField(
           title: '',
           selectedValue: realDogType,
@@ -161,7 +237,9 @@ class _DogRegisterScreen1State extends State<DogRegisterScreen1> {
           hintText: '품종',
           height: 55,
         ),
-        const SizedBox(height: 65.0,),
+        const SizedBox(
+          height: 65.0,
+        ),
       ],
     );
   }
