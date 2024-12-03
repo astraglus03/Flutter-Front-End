@@ -1,11 +1,14 @@
 import 'package:dimple/common/view/root_tab.dart';
 import 'package:dimple/common/view_model/go_router.dart';
+import 'package:dimple/user/view/menstruation_detail_screen1.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:dimple/calendar/config/app_config.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
-void main() {
+void main() async {
+  await initializeDateFormatting();
 
   // 실제 서버 사용시
   // AppConfig.environment = Environment.production;
@@ -29,7 +32,7 @@ class MyApp extends ConsumerWidget {
     //   );
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: RootTab(),
+      home: MenstruationDetailScreen1(),
     );
   }
 }
