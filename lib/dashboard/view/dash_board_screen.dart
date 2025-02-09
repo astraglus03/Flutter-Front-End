@@ -2,26 +2,33 @@ import 'package:dimple/calendar/view/calendar_screen.dart';
 import 'package:dimple/common/const/colors.dart';
 import 'package:dimple/common/layout/default_layout.dart';
 import 'package:dimple/common/utils/data_utils.dart';
+import 'package:dimple/common/view_model/go_router.dart';
 import 'package:dimple/dashboard/component/dashboard_container.dart';
 import 'package:dimple/dashboard/component/dashboard_petInfo_container.dart';
 import 'package:dimple/dashboard/view/food_range_screen.dart';
 import 'package:dimple/dashboard/view/moved_distance_detail_screen.dart';
 import 'package:dimple/dashboard/view/pupu_detail_screen.dart';
+import 'package:dimple/user/model/user_model.dart';
 import 'package:dimple/user/view/dog_register_screen1.dart';
+import 'package:dimple/user/view/temrs_screen.dart';
+import 'package:dimple/user/view_model/user_me_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_flip_card/flutter_flip_card.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:go_router/go_router.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
 
-class DashBoardScreen extends StatefulWidget {
+class DashBoardScreen extends ConsumerStatefulWidget {
+  static String get routeName => 'dashboard';
   const DashBoardScreen({super.key});
 
   @override
-  State<DashBoardScreen> createState() => _DashBoardScreenState();
+  ConsumerState<DashBoardScreen> createState() => _DashBoardScreenState();
 }
 
-class _DashBoardScreenState extends State<DashBoardScreen> {
+class _DashBoardScreenState extends ConsumerState<DashBoardScreen> {
   final FlipCardController _controller = FlipCardController();
   final ScrollController controller = ScrollController();
 
@@ -40,6 +47,8 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final userState = ref.watch(userMeProvider);
+
     const NeverScrollableScrollPhysics();
     return DefaultLayout(
       appBar: AppBar(
@@ -54,52 +63,73 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                   context: context,
                   isScrollControlled: true,
                   builder: (BuildContext context) {
-                    return SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.7,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          SizedBox(height: 20.0),
-                          CircleAvatar(
-                            radius: 50,
-                            backgroundImage:
-                                AssetImage('assets/img/runningDog.jpg'),
-                          ),
-                          SizedBox(height: 12.0),
-                          Text(
-                            '사용자 이름',
-                            style: TextStyle(
-                              fontSize: 20.0,
-                              fontWeight: FontWeight.w700,
+                    if (userState is UserModel) {
+                      return SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.7,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            SizedBox(height: 20.0),
+                            CircleAvatar(
+                              radius: 50,
+                              backgroundImage: userState.profileImage != null
+                                  ? NetworkImage(userState.profileImage)
+                                  : AssetImage('assets/img/runningDog.jpg'),
                             ),
-                          ),
-                          SizedBox(height: 16.0),
-                          Expanded(
+                            SizedBox(height: 12.0),
+                            Text(
+                              userState.name,
+                              style: TextStyle(
+                                fontSize: 20.0,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                            SizedBox(height: 8.0),
+                            Text(
+                              userState.email,
+                              style: TextStyle(
+                                fontSize: 14.0,
+                                color: Colors.grey,
+                              ),
+                            ),
+                            SizedBox(height: 16.0),
+                            Expanded(
                               child: ListView(
-                            children: [
-                              ListTile(
-                                title: Text('이용약관'),
-                                onTap: () {},
+                                children: [
+                                  ListTile(
+                                    title: Text('이용약관'),
+                                    onTap: () {
+                                      context.goNamed(TermsScreen.routeName);
+                                    },
+                                  ),
+                                  SizedBox(height: 8.0),
+                                  ListTile(
+                                    title: Text('회원탈퇴'),
+                                    onTap: () {
+                                      ref.read(userMeProvider.notifier).logout();
+                                    },
+                                  ),
+                                  SizedBox(height: 8.0),
+                                  ListTile(
+                                    title: Text('로그아웃'),
+                                    onTap: () {
+                                      ref.read(userMeProvider.notifier).logout();
+                                    },
+                                  ),
+                                ],
                               ),
-                              SizedBox(
-                                height: 8.0,
-                              ),
-                              ListTile(
-                                title: Text('회원탈퇴'),
-                                onTap: () {},
-                              ),
-                              SizedBox(
-                                height: 8.0,
-                              ),
-                              ListTile(
-                                title: Text('로그아웃'),
-                                onTap: () {},
-                              ),
-                            ],
-                          )),
-                        ],
-                      ),
-                    );
+                            ),
+                          ],
+                        ),
+                      );
+                    } else {
+                      return SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.7,
+                        child: Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                      );
+                    }
                   },
                 );
               },
@@ -108,7 +138,6 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
           ),
         ],
       ),
-      floatingActionButton: _getMultiplePets(context),
       child: SafeArea(
         child: CustomScrollView(
           controller: controller,
@@ -128,50 +157,6 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
       ),
     );
   }
-}
-
-Widget _getMultiplePets(context) {
-  return SpeedDial(
-    spaceBetweenChildren: 8,
-    visible: true,
-    animatedIcon: AnimatedIcons.menu_close,
-    animatedIconTheme: IconThemeData(size: 20),
-    backgroundColor: PRIMARY_COLOR,
-    useRotationAnimation: true,
-    curve: Curves.elasticInOut,
-    children: [
-      // 나중에 스피드 다이얼은 리스트 뷰로 찍을 예정
-      SpeedDialChild(
-        backgroundColor: PRIMARY_COLOR,
-        child: Padding(
-          padding: const EdgeInsets.all(5.0),
-          child: Image.asset(
-            'assets/img/banreou.png',
-            fit: BoxFit.cover,
-          ),
-        ),
-        onTap: () {},
-      ),
-      SpeedDialChild(
-        backgroundColor: PRIMARY_COLOR,
-        child: Padding(
-          padding: const EdgeInsets.all(5.0),
-          child: Image.asset(
-            'assets/img/runningDog.jpg',
-            fit: BoxFit.cover,
-          ),
-        ),
-        onTap: () {},
-      ),
-      SpeedDialChild(
-        backgroundColor: PRIMARY_COLOR,
-        child: Icon(Icons.add),
-        onTap: () {
-          pushScreenWithoutNavBar(context, DogRegisterScreen1());
-        },
-      ),
-    ],
-  );
 }
 
 SliverPadding petInfoSliver(FlipCardController controller) {

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 class CustomTextFormField<T> extends StatelessWidget {
   final ValueChanged<T>? onChanged;
+  final TextEditingController controller;
   final String labelText;
   final bool isNumber;
   final double? width;
@@ -13,6 +14,7 @@ class CustomTextFormField<T> extends StatelessWidget {
   const CustomTextFormField({
     super.key,
     this.onChanged,
+    required this.controller,
     required this.labelText,
     this.isNumber = false,
     this.width = 135,
@@ -48,6 +50,7 @@ class CustomTextFormField<T> extends StatelessWidget {
           width: width,
           height: height,
           child: TextFormField(
+            controller: controller,
             keyboardType: isNumber ? TextInputType.number : TextInputType.text,
             cursorColor: PRIMARY_COLOR,
             autofocus: autofocus,

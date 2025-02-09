@@ -5,15 +5,24 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:dimple/common/const/colors.dart';
 import 'package:dimple/common/layout/default_layout.dart';
+import 'package:dimple/user/view_model/dog_register_provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class ModifyPetInfoScreen extends StatefulWidget {
+class ModifyPetInfoScreen extends ConsumerStatefulWidget {
   const ModifyPetInfoScreen({super.key});
 
   @override
-  State<ModifyPetInfoScreen> createState() => _ModifyPetInfoScreenState();
+  ConsumerState<ModifyPetInfoScreen> createState() => _ModifyPetInfoScreenState();
 }
 
-class _ModifyPetInfoScreenState extends State<ModifyPetInfoScreen> {
+class _ModifyPetInfoScreenState extends ConsumerState<ModifyPetInfoScreen> {
+  final _nameController = TextEditingController();
+  final _ageController = TextEditingController();
+  final _weightController = TextEditingController();
+  final _heightController = TextEditingController();
+  final _legLengthController = TextEditingController();
+  final _registrationNumberController = TextEditingController();
+
   XFile? selectedImage;
   String realDogType = '';
   String neutral1 = '';
@@ -28,6 +37,49 @@ class _ModifyPetInfoScreenState extends State<ModifyPetInfoScreen> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    // TODO: 기존 반려견 정보 불러오기
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _ageController.dispose();
+    _weightController.dispose();
+    _heightController.dispose();
+    _legLengthController.dispose();
+    _registrationNumberController.dispose();
+    super.dispose();
+  }
+
+  void _updatePetInfo() {
+    // 상태 저장
+    ref.read(dogRegisterProvider.notifier).saveBasicInfo(
+      name: _nameController.text,
+      age: int.parse(_ageController.text),
+      weight: double.parse(_weightController.text),
+      gender: gender == '암컷' ? '여' : '남',
+      breed: realDogType,
+      height: int.parse(_heightController.text),
+      legLength: int.parse(_legLengthController.text),
+    );
+
+    ref.read(dogRegisterProvider.notifier).saveAdditionalInfo(
+      bloodType: blood,
+      registrationNumber: _registrationNumberController.text,
+      image: selectedImage?.path,
+    );
+
+    // TODO: API 호출 및 성공 시 화면 닫기
+    ref.read(dogRegisterProvider.notifier).registerDog().then((registered) {
+      if (registered != null) {
+        Navigator.of(context).pop();
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return DefaultLayout(
       appBar: AppBar(
@@ -38,17 +90,15 @@ class _ModifyPetInfoScreenState extends State<ModifyPetInfoScreen> {
           Padding(
             padding: const EdgeInsets.only(right: 12.0),
             child: ElevatedButton(
-              onPressed: () {
-                // 정보 수정하는 API 연동 부분
-              },
+              onPressed: _updatePetInfo,
               child: const Text('수정',),
               style: ElevatedButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-                minimumSize: Size(35, 35),
-                backgroundColor: PRIMARY_COLOR,
-                padding: EdgeInsets.symmetric(horizontal: 16.0)
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  minimumSize: Size(35, 35),
+                  backgroundColor: PRIMARY_COLOR,
+                  padding: EdgeInsets.symmetric(horizontal: 16.0)
               ),
             ),
           ),
@@ -57,17 +107,17 @@ class _ModifyPetInfoScreenState extends State<ModifyPetInfoScreen> {
       child: ListView(
         keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
         children: [
-              const SizedBox(height: 10.0),
-              _buildImagePicker(),
-              const SizedBox(height: 10.0),
-              _buildBasicInfoRow(),
-              const SizedBox(height: 10.0),
-              _buildMeasurementRow(),
-              const SizedBox(height: 10.0),
-              _buildAdditionalInfoRow(),
-              const SizedBox(height: 10.0),
-            ],
-          ),
+          const SizedBox(height: 10.0),
+          _buildImagePicker(),
+          const SizedBox(height: 10.0),
+          _buildBasicInfoRow(),
+          const SizedBox(height: 10.0),
+          _buildMeasurementRow(),
+          const SizedBox(height: 10.0),
+          _buildAdditionalInfoRow(),
+          const SizedBox(height: 10.0),
+        ],
+      ),
     );
   }
 
@@ -116,8 +166,15 @@ class _ModifyPetInfoScreenState extends State<ModifyPetInfoScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        CustomTextFormField(labelText: '이름'),
-        CustomTextFormField(labelText: '나이', isNumber: true),
+        CustomTextFormField(
+            controller: _nameController,
+            labelText: '이름'
+        ),
+        CustomTextFormField(
+            controller: _ageController,
+            labelText: '나이',
+            isNumber: true
+        ),
       ],
     );
   }
@@ -126,8 +183,15 @@ class _ModifyPetInfoScreenState extends State<ModifyPetInfoScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        CustomTextFormField(labelText: '몸무게(kg)'),
-        CustomTextFormField(labelText: '신장(cm)', isNumber: true),
+        CustomTextFormField(
+            controller: _weightController,
+            labelText: '몸무게(kg)'
+        ),
+        CustomTextFormField(
+            controller: _heightController,
+            labelText: '신장(cm)',
+            isNumber: true
+        ),
       ],
     );
   }
@@ -149,7 +213,10 @@ class _ModifyPetInfoScreenState extends State<ModifyPetInfoScreen> {
               },
               hintText: '혈액형',
             ),
-            CustomTextFormField(labelText: '다리길이(cm)'),
+            CustomTextFormField(
+                controller: _legLengthController,
+                labelText: '다리길이(cm)'
+            ),
           ],
         ),
         const SizedBox(height: 14),
@@ -194,7 +261,8 @@ class _ModifyPetInfoScreenState extends State<ModifyPetInfoScreen> {
           hintText: '품종',
         ),
         const SizedBox(height: 14),
-        const CustomTextFormField(
+        CustomTextFormField(
+          controller: _registrationNumberController,
           labelText: '등록번호',
           isNumber: true,
           width: 310,

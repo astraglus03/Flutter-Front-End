@@ -20,6 +20,7 @@ import '../view/toilet_record_dialog.dart';
 import '../view/walk_result_page.dart';
 
 class MapScreen extends ConsumerStatefulWidget {
+  static String get routeName => 'map';
   const MapScreen({Key? key}) : super(key: key);
 
   @override

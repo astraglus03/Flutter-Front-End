@@ -3,18 +3,26 @@ import 'package:dimple/common/component/custom_dropdown_form_field.dart';
 import 'package:dimple/common/component/custom_text_formfield.dart';
 import 'package:dimple/common/component/submit_button.dart';
 import 'package:dimple/user/view/dog_register_screen2.dart';
+import 'package:dimple/user/view_model/dog_register_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:dimple/common/layout/default_layout.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class DogRegisterScreen1 extends StatefulWidget {
+class DogRegisterScreen1 extends ConsumerStatefulWidget {
+  static String get routeName => '/dog-register1';
   const DogRegisterScreen1({super.key});
 
   @override
-  State<DogRegisterScreen1> createState() => _DogRegisterScreen1State();
+  ConsumerState<DogRegisterScreen1> createState() => _DogRegisterScreen1State();
 }
 
-class _DogRegisterScreen1State extends State<DogRegisterScreen1> {
+class _DogRegisterScreen1State extends ConsumerState<DogRegisterScreen1> {
+  final _nameController = TextEditingController();
+  final _ageController = TextEditingController();
+  final _weightController = TextEditingController();
+  final _heightController = TextEditingController();
+  final _legLengthController = TextEditingController();
   XFile? selectedImage;
   String realDogType = '';
   String neutral1 = '';
@@ -26,11 +34,38 @@ class _DogRegisterScreen1State extends State<DogRegisterScreen1> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_){
       _alertShowDialog();
     });
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _ageController.dispose();
+    _weightController.dispose();
+    _heightController.dispose();
+    _legLengthController.dispose();
+    super.dispose();
+  }
+
+  void _saveAndNavigate() {
+    // 상태 저장
+    ref.read(dogRegisterProvider.notifier).saveBasicInfo(
+      name: _nameController.text,
+      age: int.parse(_ageController.text),
+      weight: double.parse(_weightController.text),
+      gender: gender == '암컷' ? '여' : '남',
+      breed: realDogType,
+      height: int.parse(_heightController.text),
+      legLength: int.parse(_legLengthController.text),
+    );
+
+    // 다음 화면으로 이동
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) => DogRegisterScreen2()),
+    );
   }
 
   @override
@@ -41,9 +76,7 @@ class _DogRegisterScreen1State extends State<DogRegisterScreen1> {
           ListView(
             keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
             children: [
-              const SizedBox(
-                height: 50.0,
-              ),
+              const SizedBox(height: 50.0),
               _buildImagePicker(),
               const SizedBox(height: 20.0),
               _buildBasicInfoRow(),
@@ -59,10 +92,7 @@ class _DogRegisterScreen1State extends State<DogRegisterScreen1> {
             child: Center(
               child: SubmitButton(
                 text: '다음',
-                onPressed: () {
-                  Navigator.of(context).push(
-                      MaterialPageRoute(builder: (_) => DogRegisterScreen2()));
-                },
+                onPressed: _saveAndNavigate,
               ),
             ),
           ),
@@ -161,25 +191,24 @@ class _DogRegisterScreen1State extends State<DogRegisterScreen1> {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         CustomTextFormField(
+          controller: _nameController,
           labelText: '',
           width: 310,
           hintText: '이름',
           height: 65,
         ),
-        const SizedBox(
-          height: 10.0,
-        ),
+        const SizedBox(height: 10.0),
         CustomTextFormField(
+          controller: _ageController,
           labelText: '',
           isNumber: true,
           width: 310,
           hintText: '나이',
           height: 65,
         ),
-        const SizedBox(
-          height: 10.0,
-        ),
+        const SizedBox(height: 10.0),
         CustomTextFormField(
+          controller: _weightController,
           labelText: '',
           width: 310,
           hintText: '몸무게',
@@ -221,9 +250,7 @@ class _DogRegisterScreen1State extends State<DogRegisterScreen1> {
             ),
           ],
         ),
-        const SizedBox(
-          height: 10.0,
-        ),
+        const SizedBox(height: 10.0),
         CustomDropdownFormField(
           title: '',
           selectedValue: realDogType,
@@ -237,9 +264,7 @@ class _DogRegisterScreen1State extends State<DogRegisterScreen1> {
           hintText: '품종',
           height: 55,
         ),
-        const SizedBox(
-          height: 65.0,
-        ),
+        const SizedBox(height: 65.0),
       ],
     );
   }

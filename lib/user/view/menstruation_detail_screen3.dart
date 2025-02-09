@@ -1,4 +1,5 @@
 import 'package:dimple/common/layout/default_layout.dart';
+import 'package:dimple/common/view/root_tab.dart';
 import 'package:dimple/user/component/menstruation_container.dart';
 import 'package:dimple/user/view_model/menstruation_provider.dart';
 import 'package:flutter/material.dart';
@@ -32,7 +33,7 @@ class _MenstruationDetailScreen2State extends ConsumerState<MenstruationDetailSc
         },
         onTap: () {
           print('${menstruationInfo.lastPeriodStartDate},${menstruationInfo.periodDuration}, ${menstruationInfo.cycleLength}');
-          // Navigator.of(context).push(MaterialPageRoute(builder: (_) => MenstruationDetailScreen3()));
+          Navigator.of(context).push(MaterialPageRoute(builder: (_) => RootTab()));
         },
       ),
     );

@@ -8,6 +8,7 @@ import '../provider/calendar_provider.dart';
 import 'widgets/add_event_bottom_sheet.dart';
 
 class CalendarScreen extends ConsumerStatefulWidget {
+  static String get routeName => 'calendar';
   const CalendarScreen({super.key});
 
   @override

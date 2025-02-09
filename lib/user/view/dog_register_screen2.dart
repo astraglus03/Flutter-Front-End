@@ -2,24 +2,63 @@ import 'dart:io';
 import 'package:dimple/common/component/custom_dropdown_form_field.dart';
 import 'package:dimple/common/component/custom_text_formfield.dart';
 import 'package:dimple/common/component/submit_button.dart';
+import 'package:dimple/user/view/menstruation_detail_screen1.dart';
+import 'package:dimple/user/view_model/dog_register_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:dimple/common/layout/default_layout.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class DogRegisterScreen2 extends StatefulWidget {
+class DogRegisterScreen2 extends ConsumerStatefulWidget {
+  static String get routeName => '/dog-register2';
   const DogRegisterScreen2({super.key});
 
   @override
-  State<DogRegisterScreen2> createState() => _DogRegisterScreen2State();
+  ConsumerState<DogRegisterScreen2> createState() => _DogRegisterScreen2State();
 }
 
-class _DogRegisterScreen2State extends State<DogRegisterScreen2> {
+class _DogRegisterScreen2State extends ConsumerState<DogRegisterScreen2> {
+  final _heightController = TextEditingController();
+  final _legLengthController = TextEditingController();
+  final _registrationNumberController = TextEditingController();
   XFile? selectedImage;
-  String blood='';
+  String blood = '';
 
   final List<String> bloodTypes = [
     'IDA1+','IDA1-','IDA2','IDA3','IDA4','IDA5','IDA6','IDA7','IDA8'
   ];
+
+  @override
+  void dispose() {
+    _heightController.dispose();
+    _legLengthController.dispose();
+    _registrationNumberController.dispose();
+    super.dispose();
+  }
+
+  void _saveAndNavigate() {
+    // 상태 저장
+    ref.read(dogRegisterProvider.notifier).saveAdditionalInfo(
+      bloodType: blood,
+      registrationNumber: _registrationNumberController.text,
+      image: selectedImage?.path,
+    );
+
+    // 성별에 따라 다른 화면으로 이동
+    final dog = ref.read(dogRegisterProvider);
+    if (dog?.gender == '여') {
+      Navigator.of(context).push(
+        MaterialPageRoute(builder: (_) => MenstruationDetailScreen1()),
+      );
+    } else {
+      // 강아지 등록 API 호출
+      ref.read(dogRegisterProvider.notifier).registerDog().then((registered) {
+        if (registered != null) {
+          // TODO: 홈 화면으로 이동
+        }
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,10 +83,7 @@ class _DogRegisterScreen2State extends State<DogRegisterScreen2> {
               child: Center(
                 child: SubmitButton(
                   text: '완료',
-                  onPressed: () {
-                    // TODO: 반려견 등록 api 연동하기 + RootTab으로 가기.
-                    // Navigator.of(context).push(MaterialPageRoute(builder: (_) => MenstruationDetailScreen2()));
-                  },
+                  onPressed: _saveAndNavigate,
                 ),
               ),
             ),
@@ -102,10 +138,22 @@ class _DogRegisterScreen2State extends State<DogRegisterScreen2> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        CustomTextFormField(labelText: '' ,width: 310,hintText: '신장',height: 65,),
-        const SizedBox(height: 10.0,),
-        CustomTextFormField(labelText: '',width: 310,hintText: '다리길이',height: 65,),
-        const SizedBox(height: 10.0,),
+        CustomTextFormField(
+          controller: _heightController,
+          labelText: '',
+          width: 310,
+          hintText: '신장',
+          height: 65,
+        ),
+        const SizedBox(height: 10.0),
+        CustomTextFormField(
+          controller: _legLengthController,
+          labelText: '',
+          width: 310,
+          hintText: '다리길이',
+          height: 65,
+        ),
+        const SizedBox(height: 10.0),
         CustomDropdownFormField(
           title: '',
           selectedValue: blood,
@@ -115,13 +163,20 @@ class _DogRegisterScreen2State extends State<DogRegisterScreen2> {
               blood = value;
             });
           },
-          hintText: '성별',
+          hintText: '혈액형',
           width: 310,
           height: 55,
         ),
-        const SizedBox(height: 20.0,),
-        CustomTextFormField(labelText: '',isNumber: true ,width: 310,hintText: '등록번호',height: 65,),
-        SizedBox(height: 125.0,),
+        const SizedBox(height: 20.0),
+        CustomTextFormField(
+          controller: _registrationNumberController,
+          labelText: '',
+          isNumber: true,
+          width: 310,
+          hintText: '등록번호',
+          height: 65,
+        ),
+        SizedBox(height: 125.0),
       ],
     );
   }

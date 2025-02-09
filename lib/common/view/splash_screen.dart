@@ -3,6 +3,7 @@ import 'package:dimple/common/layout/default_layout.dart';
 import 'package:flutter/material.dart';
 
 class SplashScreen extends StatelessWidget {
+  static String get routeName => 'splash';
   const SplashScreen({super.key});
 
   @override
