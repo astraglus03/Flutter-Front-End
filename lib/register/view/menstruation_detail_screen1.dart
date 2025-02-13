@@ -1,14 +1,18 @@
 import 'package:dimple/common/component/submit_button.dart';
 import 'package:dimple/common/const/colors.dart';
-import 'package:dimple/user/view/menstruation_detail_screen2.dart';
+import 'package:dimple/common/view_model/go_router.dart';
+import 'package:dimple/register/view/menstruation_detail_screen2.dart';
 import 'package:dimple/user/view_model/menstruation_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 final focusedDayProvider = StateProvider<DateTime>((ref) => DateTime.now());
 
 class MenstruationDetailScreen1 extends ConsumerWidget {
+  static String get routeName => '/menstruation1';
+
   const MenstruationDetailScreen1({super.key});
 
   @override
@@ -24,7 +28,9 @@ class MenstruationDetailScreen1 extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const SizedBox(height: 50,),
+              const SizedBox(
+                height: 50,
+              ),
               const Text(
                 '마지막 생리 시작일이\n 언제인가요?',
                 style: TextStyle(
@@ -45,19 +51,22 @@ class MenstruationDetailScreen1 extends ConsumerWidget {
                 child: Column(
                   children: [
                     TableCalendar(
-                      locale:'ko_KR',
+                      locale: 'ko_KR',
                       firstDay: DateTime.utc(2010, 1, 1),
                       lastDay: DateTime.now(),
                       focusedDay: focusedDay,
                       calendarFormat: CalendarFormat.month,
                       selectedDayPredicate: (day) {
                         return menstruationInfo.lastPeriodStartDate != null &&
-                            isSameDay(menstruationInfo.lastPeriodStartDate!, day);
+                            isSameDay(
+                                menstruationInfo.lastPeriodStartDate!, day);
                       },
                       onDaySelected: (selectedDay, focusedDay) {
-                        ref.read(menstruationProvider.notifier)
+                        ref
+                            .read(menstruationProvider.notifier)
                             .setLastPeriodStartDate(selectedDay);
-                        ref.read(focusedDayProvider.notifier).state = focusedDay;
+                        ref.read(focusedDayProvider.notifier).state =
+                            focusedDay;
                       },
                       headerStyle: const HeaderStyle(
                         formatButtonVisible: false,
@@ -171,11 +180,7 @@ class MenstruationDetailScreen1 extends ConsumerWidget {
                   text: '다음',
                   onPressed: menstruationInfo.lastPeriodStartDate != null
                       ? () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (_) => const MenstruationDetailScreen2(),
-                            ),
-                          );
+                          context.goNamed(MenstruationDetailScreen2.routeName);
                         }
                       : null,
                 ),
@@ -187,4 +192,3 @@ class MenstruationDetailScreen1 extends ConsumerWidget {
     );
   }
 }
-

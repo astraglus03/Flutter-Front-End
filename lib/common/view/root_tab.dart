@@ -3,7 +3,7 @@ import 'package:dimple/common/const/colors.dart';
 import 'package:dimple/dashboard/view/dash_board_screen.dart';
 import 'package:dimple/map/view/map_page.dart';
 import 'package:dimple/social/view/social_screen.dart';
-import 'package:dimple/user/view/dog_register_screen1.dart';
+import 'package:dimple/register/view/dog_register_screen1.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
@@ -25,6 +25,7 @@ class _RootTabState extends State<RootTab> {
   Widget build(BuildContext context) {
     return PersistentTabView(
       floatingActionButton: _currentIndex ==0 ? _getMultiplePets(context) : null,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
       tabs: [
         PersistentTabConfig(
           screen: DashBoardScreen(),

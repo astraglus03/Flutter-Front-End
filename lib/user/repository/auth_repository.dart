@@ -4,6 +4,7 @@ import 'package:dimple/common/model/login_response.dart';
 import 'package:dimple/user/model/user_model.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 
 final authRepositoryProvider = Provider<AuthRepository>((ref) {
   final dio = ref.watch(dioProvider);
@@ -19,17 +20,44 @@ class AuthRepository {
     required this.dio,
   });
 
-  // 소셜 로그인 시작
-  Future<String> socialLogin(String provider) async {
+  // 구글 로그인
+  Future<String> googleLogin() async {
     try {
       final resp = await dio.get(
-        '$baseUrl/auth/login/$provider',
+        '$baseUrl/auth/login/google',
       );
       // 리다이렉션 URL을 반환
       return resp.headers.value('location') ?? '';
     } catch (e) {
       throw Exception('소셜 로그인 시작 실패: $e');
     }
+  }
+
+  // 카카오 로그인 및 인증 코드 받기
+  Future<String> getKakaoAuthCode() async {
+    try {
+      OAuthToken token;
+      if (await isKakaoTalkInstalled()) {
+        token = await UserApi.instance.loginWithKakaoTalk();
+      } else {
+        token = await UserApi.instance.loginWithKakaoAccount();
+      }
+      return token.accessToken;
+    } catch (error) {
+      print('카카오 인증 에러: $error');
+      throw Exception('카카오 에러');
+    }
+  }
+
+  // 서버에 카카오 인증 코드 전송하고 JWT 토큰 받기
+  Future<LoginResponse> authenticateWithKakao(String kakaoAuthCode) async {
+    final resp = await dio.post(
+      '$baseUrl/auth/login/kakao',
+      data: {
+        'token': kakaoAuthCode,
+      },
+    );
+    return LoginResponse.fromJson(resp.data);
   }
 
   // JWT 토큰 발급
@@ -61,14 +89,4 @@ class AuthRepository {
       throw Exception('로그아웃 실패: $e');
     }
   }
-
-  // Future<TokenResponse> token() async {
-  //   final resp = await dio.post(
-  //     '$baseUrl/token',
-  //     options: Options(headers: {
-  //       'refreshToken': 'true',
-  //     }),
-  //   );
-  //   return TokenResponse.fromJson(resp.data);
-  // }
 }

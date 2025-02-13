@@ -1,11 +1,15 @@
 import 'package:dimple/common/layout/default_layout.dart';
 import 'package:dimple/common/view/root_tab.dart';
+import 'package:dimple/common/view_model/go_router.dart';
+import 'package:dimple/register/view/recent_check_screen.dart';
 import 'package:dimple/user/component/menstruation_container.dart';
 import 'package:dimple/user/view_model/menstruation_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 class MenstruationDetailScreen3 extends ConsumerStatefulWidget {
+  static String get routeName => '/menstruation3';
   const MenstruationDetailScreen3({super.key});
 
   @override
@@ -24,7 +28,7 @@ class _MenstruationDetailScreen2State extends ConsumerState<MenstruationDetailSc
       child: MenstruationContainer(
         title: '생리가 보통 \n며칠 지속됩니까?',
         currentValue: _currentValue,
-        buttonTitle: '완료',
+        buttonTitle: '다음',
         onChanged: (value) {
             setState(() {
               _currentValue = value;
@@ -32,8 +36,7 @@ class _MenstruationDetailScreen2State extends ConsumerState<MenstruationDetailSc
             });
         },
         onTap: () {
-          print('${menstruationInfo.lastPeriodStartDate},${menstruationInfo.periodDuration}, ${menstruationInfo.cycleLength}');
-          Navigator.of(context).push(MaterialPageRoute(builder: (_) => RootTab()));
+         context.goNamed(RecentCheckScreen.routeName);
         },
       ),
     );

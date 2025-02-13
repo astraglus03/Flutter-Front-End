@@ -2,9 +2,11 @@ import 'dart:io';
 import 'package:dimple/common/component/custom_dropdown_form_field.dart';
 import 'package:dimple/common/component/custom_text_formfield.dart';
 import 'package:dimple/common/component/submit_button.dart';
-import 'package:dimple/user/view/dog_register_screen2.dart';
+import 'package:dimple/common/view_model/go_router.dart';
+import 'package:dimple/register/view/dog_register_screen2.dart';
 import 'package:dimple/user/view_model/dog_register_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:dimple/common/layout/default_layout.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -58,14 +60,14 @@ class _DogRegisterScreen1State extends ConsumerState<DogRegisterScreen1> {
       weight: double.parse(_weightController.text),
       gender: gender == '암컷' ? '여' : '남',
       breed: realDogType,
-      height: int.parse(_heightController.text),
-      legLength: int.parse(_legLengthController.text),
+      // height: int.parse(_heightController.text),
+      // legLength: int.parse(_legLengthController.text),
+      image: '',
+      isNeutered: true,
     );
 
     // 다음 화면으로 이동
-    Navigator.of(context).push(
-      MaterialPageRoute(builder: (_) => DogRegisterScreen2()),
-    );
+    context.pushNamed(DogRegisterScreen2.routeName);
   }
 
   @override

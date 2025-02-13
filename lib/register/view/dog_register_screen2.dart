@@ -2,9 +2,11 @@ import 'dart:io';
 import 'package:dimple/common/component/custom_dropdown_form_field.dart';
 import 'package:dimple/common/component/custom_text_formfield.dart';
 import 'package:dimple/common/component/submit_button.dart';
-import 'package:dimple/user/view/menstruation_detail_screen1.dart';
+import 'package:dimple/register/view/menstruation_detail_screen1.dart';
+import 'package:dimple/register/view/recent_check_screen.dart';
 import 'package:dimple/user/view_model/dog_register_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:dimple/common/layout/default_layout.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -21,7 +23,6 @@ class _DogRegisterScreen2State extends ConsumerState<DogRegisterScreen2> {
   final _heightController = TextEditingController();
   final _legLengthController = TextEditingController();
   final _registrationNumberController = TextEditingController();
-  XFile? selectedImage;
   String blood = '';
 
   final List<String> bloodTypes = [
@@ -41,22 +42,21 @@ class _DogRegisterScreen2State extends ConsumerState<DogRegisterScreen2> {
     ref.read(dogRegisterProvider.notifier).saveAdditionalInfo(
       bloodType: blood,
       registrationNumber: _registrationNumberController.text,
-      image: selectedImage?.path,
+      height: int.parse(_heightController.text),
+      legLength: int.parse(_legLengthController.text),
     );
 
     // 성별에 따라 다른 화면으로 이동
     final dog = ref.read(dogRegisterProvider);
     if (dog?.gender == '여') {
-      Navigator.of(context).push(
-        MaterialPageRoute(builder: (_) => MenstruationDetailScreen1()),
-      );
+      context.pushNamed(MenstruationDetailScreen1.routeName);
     } else {
-      // 강아지 등록 API 호출
-      ref.read(dogRegisterProvider.notifier).registerDog().then((registered) {
-        if (registered != null) {
-          // TODO: 홈 화면으로 이동
-        }
-      });
+      context.pushNamed(RecentCheckScreen.routeName);
+      // ref.read(dogRegisterProvider.notifier).registerDog().then((registered) {
+      //   if (registered != null) {
+      //     // TODO: 홈 화면으로 이동
+      //   }
+      // });
     }
   }
 
@@ -68,8 +68,6 @@ class _DogRegisterScreen2State extends ConsumerState<DogRegisterScreen2> {
           ListView(
             keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
             children: [
-              const SizedBox(height: 50.0),
-              _buildImagePicker(),
               const SizedBox(height: 20.0),
               _buildBasicInfoRow(),
               const SizedBox(height: 10.0),
@@ -82,51 +80,10 @@ class _DogRegisterScreen2State extends ConsumerState<DogRegisterScreen2> {
             child: Center(
               child: Center(
                 child: SubmitButton(
-                  text: '완료',
+                  text: '다음',
                   onPressed: _saveAndNavigate,
                 ),
               ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildImagePicker() {
-    final imagePicker = ImagePicker();
-    return GestureDetector(
-      onTap: () async {
-        final image = await imagePicker.pickImage(source: ImageSource.gallery);
-        if (image != null) {
-          setState(() {
-            selectedImage = image;
-          });
-        }
-      },
-      child: Stack(
-        children: [
-          Align(
-            alignment: Alignment.center,
-            child: CircleAvatar(
-              radius: 50,
-              backgroundImage: selectedImage != null
-                  ? FileImage(File(selectedImage!.path))
-                  : const AssetImage('assets/img/runningDog.jpg') as ImageProvider,
-            ),
-          ),
-          Positioned(
-            left: 65,
-            bottom: 0,
-            right: 0,
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.grey.shade300,
-                shape: BoxShape.circle,
-                border: Border.all(color: Colors.white, width: 1),
-              ),
-              padding: const EdgeInsets.all(8),
-              child: const Icon(Icons.camera_alt, color: Colors.white, size: 15),
             ),
           ),
         ],

@@ -28,8 +28,8 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final eventsState = ref.watch(calendarProvider);
-    
+    // final eventsState = ref.watch(calendarProvider);
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -40,8 +40,8 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
       body: Column(
         children: [
           _buildProfileSection(),
-          _buildCalendar(eventsState),
-          _buildEventList(eventsState),
+          // _buildCalendar(eventsState),
+          // _buildEventList(eventsState),
         ],
       ),
     );
@@ -59,7 +59,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 4),
               child: Chip(
                 avatar: const CircleAvatar(
-                  backgroundImage: AssetImage('assets/profile.png'),
+                  backgroundImage: AssetImage('assets/img/banreou.png'),
                 ),
                 label: const Text('마루'),
                 backgroundColor: Colors.amber.shade200,
@@ -89,9 +89,9 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                           _focusedDay.month,
                         );
                       });
-                      ref.read(calendarProvider.notifier).updateFocusedDay(_focusedDay);
+                      // ref.read(calendarProvider.notifier).updateFocusedDay(_focusedDay);
                     },
-                    child: Text('<<', 
+                    child: Text('<<',
                       style: TextStyle(color: Colors.grey.shade400, fontSize: 16)
                     ),
                   ),
@@ -104,9 +104,9 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                           _focusedDay.month - 1,
                         );
                       });
-                      ref.read(calendarProvider.notifier).updateFocusedDay(_focusedDay);
+                      // ref.read(calendarProvider.notifier).updateFocusedDay(_focusedDay);
                     },
-                    child: Text('<', 
+                    child: Text('<',
                       style: TextStyle(color: Colors.grey.shade400, fontSize: 16)
                     ),
                   ),
@@ -129,9 +129,9 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                           _focusedDay.month + 1,
                         );
                       });
-                      ref.read(calendarProvider.notifier).updateFocusedDay(_focusedDay);
+                      // ref.read(calendarProvider.notifier).updateFocusedDay(_focusedDay);
                     },
-                    child: Text('>', 
+                    child: Text('>',
                       style: TextStyle(color: Colors.grey.shade400, fontSize: 16)
                     ),
                   ),
@@ -144,9 +144,9 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                           _focusedDay.month,
                         );
                       });
-                      ref.read(calendarProvider.notifier).updateFocusedDay(_focusedDay);
+                      // ref.read(calendarProvider.notifier).updateFocusedDay(_focusedDay);
                     },
-                    child: Text('>>', 
+                    child: Text('>>',
                       style: TextStyle(color: Colors.grey.shade400, fontSize: 16)
                     ),
                   ),
@@ -224,7 +224,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                 dowBuilder: (context, day) {
                   const days = ['일', '월', '화', '수', '목', '금', '토'];
                   final text = days[day.weekday % 7];
-                  return Stack( 
+                  return Stack(
                     children: [
                       Container(
                         alignment: Alignment.bottomRight,
@@ -276,7 +276,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                 setState(() {
                   _focusedDay = focusedDay;
                 });
-                ref.read(calendarProvider.notifier).updateFocusedDay(focusedDay);
+                // ref.read(calendarProvider.notifier).updateFocusedDay(focusedDay);
               },
             ),
           ),
@@ -374,7 +374,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
       ),
       direction: DismissDirection.endToStart,
       onDismissed: (_) {
-        ref.read(calendarProvider.notifier).deleteEvent(event);
+        // ref.read(calendarProvider.notifier).deleteEvent(event);
       },
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
@@ -425,7 +425,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
         child: AddEventBottomSheet(
           selectedDate: _selectedDay,
           onEventAdded: (event) {
-            ref.read(calendarProvider.notifier).addEvent(event);
+            // ref.read(calendarProvider.notifier).addEvent(event);
           },
         ),
       ),
@@ -490,4 +490,4 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
       ],
     );
   }
-} 
+}

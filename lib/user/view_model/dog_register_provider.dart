@@ -14,60 +14,99 @@ class DogRegisterNotifier extends StateNotifier<DogModel?> {
     required this.repository,
   }) : super(null);
 
-  // 기본 정보 저장 (Screen1)
   void saveBasicInfo({
+    required String? image,
     required String name,
     required int age,
     required double weight,
     required String gender,
+    required bool isNeutered,
     required String breed,
-    required int height,
-    required int legLength,
   }) {
-    state = DogModel(
+    state = state!.copyWith(
+      image: image,
       name: name,
       age: age,
       weight: weight,
       gender: gender,
+      isNeutered: isNeutered,
       breed: breed,
-      height: height,
-      legLength: legLength,
-      bloodType: '',  // Screen2에서 입력
-      registrationNumber: '',  // Screen2에서 입력
     );
   }
 
-  // 추가 정보 저장 (Screen2)
+  // Screen 2
   void saveAdditionalInfo({
+    required int height,
+    required int legLength,
     required String bloodType,
     required String registrationNumber,
-    String? image,
   }) {
     if (state == null) return;
-    
+
     state = state!.copyWith(
+      height: height,
+      legLength: legLength,
       bloodType: bloodType,
       registrationNumber: registrationNumber,
-      image: image,
     );
   }
 
-  // 생리 정보 저장 (MenstruationScreen)
-  void saveMenstruationInfo({
-    required DateTime lastMenstruation,
+  // Menstruation Screen 1
+  void saveMenstruationStartDate({
+    required DateTime menstruationStartDate,
+  }) {
+    if (state == null) return;
+
+    state = state!.copyWith(
+      menstruationStartDate: menstruationStartDate,
+    );
+  }
+
+  // Menstruation Screen 2
+  void saveMenstruationCycle({
     required int menstruationCycle,
+  }) {
+    if (state == null) return;
+
+    state = state!.copyWith(
+      menstruationCycle: menstruationCycle,
+    );
+  }
+
+  // Menstruation Screen 3
+  void saveMenstruationDuration({
     required int menstruationDuration,
   }) {
     if (state == null) return;
-    
+
     state = state!.copyWith(
-      lastMenstruation: lastMenstruation,
-      menstruationCycle: menstruationCycle,
       menstruationDuration: menstruationDuration,
     );
   }
 
-  // 강아지 등록
+  // Health Check Screen 1
+  void saveHealthCheckDate({
+    required DateTime recentCheckupDate,
+  }) {
+    if (state == null) return;
+
+    state = state!.copyWith(
+      recentCheckupDate: recentCheckupDate,
+    );
+  }
+
+  // Health Check Screen 2
+  void saveHeartWormVaccinationDate({
+    required DateTime heartwormVaccinationDate,
+  }) {
+    if (state == null) return;
+
+    state = state!.copyWith(
+      heartwormVaccinationDate: heartwormVaccinationDate,
+    );
+  }
+
+  // 강아지 등록 및 루트 탭으로 이동
   Future<DogModel?> registerDog() async {
     if (state == null) return null;
 
@@ -85,4 +124,4 @@ class DogRegisterNotifier extends StateNotifier<DogModel?> {
   void reset() {
     state = null;
   }
-} 
+}

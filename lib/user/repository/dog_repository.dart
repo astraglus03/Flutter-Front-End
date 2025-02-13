@@ -1,4 +1,5 @@
 import 'package:dimple/common/const/const.dart';
+import 'package:dimple/common/dio/dio.dart';
 import 'package:dio/dio.dart';
 import 'package:dimple/user/model/dog_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

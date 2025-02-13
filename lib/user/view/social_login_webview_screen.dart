@@ -10,12 +10,8 @@ import 'package:webview_flutter/webview_flutter.dart';
 
 class SocialLoginWebviewScreen extends ConsumerStatefulWidget {
   static String get routeName => 'social-login';
-  final String provider;
-  final String url;
 
   const SocialLoginWebviewScreen({
-    required this.provider,
-    required this.url,
     Key? key,
   }) : super(key: key);
 
@@ -43,7 +39,7 @@ class _SocialLoginWebviewScreenState extends ConsumerState<SocialLoginWebviewScr
   }
 
   Future<void> _initializeWebView() async {
-    final fullUrl = 'https://$ip${widget.url}';
+    final fullUrl = 'https://$ip/oauth2/authorization/google';
 
     final userAgent = Platform.isAndroid
         ? 'Mozilla/5.0 (Linux; Android 10; SM-G981B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.162 Mobile Safari/537.36'
@@ -123,7 +119,7 @@ class _SocialLoginWebviewScreenState extends ConsumerState<SocialLoginWebviewScr
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text('${widget.provider.toUpperCase()} 로그인'),
+        title: Text('구글 로그인'),
         backgroundColor: PRIMARY_COLOR,
         leading: IconButton(
           icon: const Icon(Icons.close),

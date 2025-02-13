@@ -9,6 +9,7 @@ class DogModel {
   final int age;
   final double weight;
   final String gender;
+  final bool isNeutered;
   @JsonKey(name: 'puppySpecies')
   final String breed;
   final int height;
@@ -18,9 +19,11 @@ class DogModel {
   final String bloodType;
   @JsonKey(name: 'registrationNumber')
   final String registrationNumber;
+  final DateTime recentCheckupDate;
+  final DateTime heartwormVaccinationDate;
   final String? image;
-  @JsonKey(name: 'lastMenstruation')
-  final DateTime? lastMenstruation;
+  @JsonKey(name: 'menstruationStartDate')
+  final DateTime? menstruationStartDate;
   @JsonKey(name: 'menstruationCycle')
   final int? menstruationCycle;
   @JsonKey(name: 'menstruationDuration')
@@ -32,13 +35,16 @@ class DogModel {
     required this.age,
     required this.weight,
     required this.gender,
+    required this.isNeutered,
     required this.breed,
     required this.height,
     required this.legLength,
     required this.bloodType,
     required this.registrationNumber,
+    required this.recentCheckupDate,
+    required this.heartwormVaccinationDate,
     this.image,
-    this.lastMenstruation,
+    this.menstruationStartDate,
     this.menstruationCycle,
     this.menstruationDuration,
   });
@@ -52,13 +58,16 @@ class DogModel {
     int? age,
     double? weight,
     String? gender,
+    bool? isNeutered,
     String? breed,
     int? height,
     int? legLength,
     String? bloodType,
     String? registrationNumber,
+    DateTime? recentCheckupDate,
+    DateTime? heartwormVaccinationDate,
     String? image,
-    DateTime? lastMenstruation,
+    DateTime? menstruationStartDate,
     int? menstruationCycle,
     int? menstruationDuration,
   }) {
@@ -68,13 +77,16 @@ class DogModel {
       age: age ?? this.age,
       weight: weight ?? this.weight,
       gender: gender ?? this.gender,
+      isNeutered : isNeutered ?? this.isNeutered,
       breed: breed ?? this.breed,
       height: height ?? this.height,
       legLength: legLength ?? this.legLength,
       bloodType: bloodType ?? this.bloodType,
       registrationNumber: registrationNumber ?? this.registrationNumber,
+      recentCheckupDate : recentCheckupDate ?? this.recentCheckupDate,
+      heartwormVaccinationDate : heartwormVaccinationDate ?? this.heartwormVaccinationDate,
       image: image ?? this.image,
-      lastMenstruation: lastMenstruation ?? this.lastMenstruation,
+      menstruationStartDate: menstruationStartDate ?? this.menstruationStartDate,
       menstruationCycle: menstruationCycle ?? this.menstruationCycle,
       menstruationDuration: menstruationDuration ?? this.menstruationDuration,
     );

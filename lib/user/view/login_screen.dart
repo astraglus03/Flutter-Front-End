@@ -10,6 +10,7 @@ import 'package:go_router/go_router.dart';
 
 class LoginScreen extends ConsumerWidget {
   static String get routeName => '/login';
+
   const LoginScreen({super.key});
 
   @override
@@ -29,16 +30,16 @@ class LoginScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 181),
             GestureDetector(
-              onTap: state is UserModelLoading 
-                ? null 
-                : () => _handleSocialLogin(context, ref, 'google'),
+              onTap: state is UserModelLoading
+                  ? null
+                  : () => context.pushNamed(SocialLoginWebviewScreen.routeName,),
               child: Image.asset('assets/img/google_login_logo.png'),
             ),
             const SizedBox(height: 18),
             GestureDetector(
-              onTap: state is UserModelLoading 
-                ? null 
-                : () => _handleSocialLogin(context, ref, 'kakao'),
+              onTap: state is UserModelLoading
+                  ? null
+                  : () => ref.read(userMeProvider.notifier).loginWithKakao(),
               child: Image.asset('assets/img/kakao_login_logo.png'),
             ),
             if (state is UserModelLoading)
@@ -52,39 +53,5 @@ class LoginScreen extends ConsumerWidget {
         ),
       ),
     );
-  }
-
-  void _handleSocialLogin(BuildContext context, WidgetRef ref, String provider) async {
-    try {
-      String redirectUrl;
-      if (provider == 'google') {
-        redirectUrl = '/oauth2/authorization/google';
-      } else {
-        redirectUrl = '/oauth2/authorization/kakao';
-      }
-      
-      print('Redirecting to: $redirectUrl'); // URL 확인용 로그
-      
-      if (context.mounted) {
-        context.pushNamed(
-          SocialLoginWebviewScreen.routeName,
-          pathParameters: {'provider': provider},
-          queryParameters: {'url': redirectUrl},
-        );
-      }
-    } catch (e) {
-      print('Social login error: $e'); // 에러 로그
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              '로그인을 시작할 수 없습니다. 다시 시도해주세요.',
-              style: TextStyle(color: Colors.white),
-            ),
-            backgroundColor: Colors.red.shade400,
-          ),
-        );
-      }
-    }
   }
 }

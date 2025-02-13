@@ -1,5 +1,6 @@
 import 'package:dimple/common/const/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class DashboardContainer extends StatelessWidget {
   final String title;
@@ -34,7 +35,7 @@ class DashboardContainer extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 12.0),
+              padding: EdgeInsets.only(left: 12).w,
               decoration: BoxDecoration(
                 color: PRIMARY_COLOR, // 상단 대표 색상
                 borderRadius: BorderRadius.only(
@@ -45,7 +46,7 @@ class DashboardContainer extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: yIcon == false
                     ? MainAxisAlignment.center
-                    : MainAxisAlignment.spaceBetween,
+                    : MainAxisAlignment.start,
                 children: [
                   if (yIcon == false)
                     Padding(
@@ -54,20 +55,25 @@ class DashboardContainer extends StatelessWidget {
                         title,
                         textAlign: TextAlign.start,
                         style: TextStyle(
-                          fontSize: 12,
+                          fontSize: 14,
                           fontWeight: FontWeight.w700,
                         ),
                       ),
                     )
                   else ...[
-                    Text(
-                      title,
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w700,
+                    Expanded(
+                      child: Text(
+                        title,
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                     ),
                     IconButton(
+                      style: IconButton.styleFrom(
+                        overlayColor: Colors.transparent,
+                      ),
                       onPressed: onTap,
                       icon: Icon(Icons.chevron_right),
                     ),

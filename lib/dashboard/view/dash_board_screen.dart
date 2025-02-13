@@ -9,8 +9,8 @@ import 'package:dimple/dashboard/view/food_range_screen.dart';
 import 'package:dimple/dashboard/view/moved_distance_detail_screen.dart';
 import 'package:dimple/dashboard/view/pupu_detail_screen.dart';
 import 'package:dimple/user/model/user_model.dart';
-import 'package:dimple/user/view/dog_register_screen1.dart';
-import 'package:dimple/user/view/temrs_screen.dart';
+import 'package:dimple/register/view/dog_register_screen1.dart';
+import 'package:dimple/dashboard/view/temrs_screen.dart';
 import 'package:dimple/user/view_model/user_me_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -99,6 +99,7 @@ class _DashBoardScreenState extends ConsumerState<DashBoardScreen> {
                                   ListTile(
                                     title: Text('이용약관'),
                                     onTap: () {
+                                      Navigator.pop(context);
                                       context.goNamed(TermsScreen.routeName);
                                     },
                                   ),
@@ -167,34 +168,34 @@ SliverPadding petInfoSliver(FlipCardController controller) {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          FlipCard(
-            rotateSide: RotateSide.bottom,
-            onTapFlipping: true,
-            axis: FlipAxis.vertical,
-            controller: controller,
-            frontWidget: DashboardPetInfoCard(
-              img: Image.asset(
-                'assets/img/banreou.png',
-                fit: BoxFit.cover,
-              ),
-              name: '마콩',
-              age: 12,
-              breed: '포메라니안',
-              petNum: 1234567891011,
-              isFront: true,
-            ),
-            backWidget: DashboardPetInfoCard(
-              img: Image.asset(
-                'assets/img/banreou.png',
-                fit: BoxFit.cover,
-              ),
-              name: '마콩',
-              breed: '포메라니안',
-              lastHeartInjection: '2023-03-12',
-              lastCheck: '2022-03-21',
-              isFront: false,
-            ),
-          ),
+          // FlipCard(
+          //   rotateSide: RotateSide.bottom,
+          //   onTapFlipping: true,
+          //   axis: FlipAxis.vertical,
+          //   controller: controller,
+          //   frontWidget: DashboardPetInfoCard(
+          //     img: Image.asset(
+          //       'assets/img/banreou.png',
+          //       fit: BoxFit.cover,
+          //     ),
+          //     name: '마콩',
+          //     age: 12,
+          //     breed: '포메라니안',
+          //     petNum: 1234567891011,
+          //     isFront: true,
+          //   ),
+          //   backWidget: DashboardPetInfoCard(
+          //     img: Image.asset(
+          //       'assets/img/banreou.png',
+          //       fit: BoxFit.cover,
+          //     ),
+          //     name: '마콩',
+          //     breed: '포메라니안',
+          //     lastHeartInjection: '2023-03-12',
+          //     lastCheck: '2022-03-21',
+          //     isFront: false,
+          //   ),
+          // ),
         ],
       ),
     ),
@@ -250,8 +251,7 @@ SliverPadding movedDistance(BuildContext context) {
         // },
         // 이렇게하면 바텀네비게이션바 유지하면서 페이지이동 --> 나중에 라우터 적용하면 달라짐
         onTap: () {
-          Navigator.of(context).push(
-              MaterialPageRoute(builder: (_) => MovedDistanceDetailScreen()));
+          pushScreenWithoutNavBar(context, MovedDistanceDetailScreen());
         },
 
         child: Row(
@@ -337,8 +337,7 @@ SliverPadding rowPupuAndCalories(BuildContext context) {
           SizedBox(width: 20),
           Expanded(
             child: DashboardContainer(
-              yIcon: false,
-              title: '이번주 설정 칼로리',
+              title: '금주 설정 칼로리',
               onTap: () {},
               child: Center(
                 child: Text("0 / 210 Kcal", textAlign: TextAlign.center,style: TextStyle(fontWeight: FontWeight.w500,fontSize: 16.0),),

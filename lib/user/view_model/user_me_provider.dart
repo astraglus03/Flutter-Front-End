@@ -48,14 +48,13 @@ class UserMeStateNotifier extends StateNotifier<UserModelBase?> {
       state = resp;
     } catch (e) {
       print('사용자 정보 조회 실패: $e');
-      await logout();
     }
   }
 
   // 소셜 로그인 시작
-  Future<String> initiateSocialLogin(String provider) async {
+  Future<String> googleLogin() async {
     try {
-      return await authRepository.socialLogin(provider);
+      return await authRepository.googleLogin();
     } catch (e) {
       print('소셜 로그인 시작 실패: $e');
       throw Exception('소셜 로그인을 시작할 수 없습니다.');
@@ -97,6 +96,36 @@ class UserMeStateNotifier extends StateNotifier<UserModelBase?> {
     }
   }
 
+  Future<void> loginWithKakao() async {
+    state = UserModelLoading();
+
+    try {
+      // 1. 카카오 인증 코드 받기
+      final kakaoAuthCode = await authRepository.getKakaoAuthCode();
+      if (kakaoAuthCode == null) {
+        state = UserModelError(message: '카카오 로그인에 실패했습니다.');
+        return;
+      }
+      // 2. 서버에 인증 코드 전송하고 JWT 토큰 받기
+      final authResp = await authRepository.authenticateWithKakao(kakaoAuthCode);
+
+      // 기존에 저장된 토큰이 있는지 확인 후 삭제
+      String? existingToken = await storage.read(key: ACCESS_TOKEN_KEY);
+      if (existingToken != null) {
+        await storage.delete(key: ACCESS_TOKEN_KEY);
+      }
+
+      // 3. 토큰 저장
+      await storage.write(key: ACCESS_TOKEN_KEY, value: authResp.accessToken);
+
+      // 4. 사용자 정보 가져오기
+      await getMe();
+    } catch (e) {
+      print('로그인 실패: $e');
+      state = UserModelError(message: '로그인에 실패했습니다.');
+    }
+  }
+
   Future<void> logout() async {
     try {
       // 서버 로그아웃 요청
@@ -115,27 +144,4 @@ class UserMeStateNotifier extends StateNotifier<UserModelBase?> {
       await storage.delete(key: ACCESS_TOKEN_KEY);
     }
   }
-
-  // Future<UserModel?> updateUserInfo({
-  //   String? name,
-  //   String? profileImage,
-  // }) async {
-  //   try {
-  //     final accessToken = await storage.read(key: ACCESS_TOKEN_KEY);
-  //     if (accessToken == null) {
-  //       throw Exception('로그인이 필요합니다.');
-  //     }
-  //
-  //     final updated = await repository.updateMe(
-  //       accessToken: accessToken,
-  //       name: name,
-  //       profileImage: profileImage,
-  //     );
-  //     state = updated;
-  //     return updated;
-  //   } catch (e) {
-  //     print('사용자 정보 업데이트 실패: $e');
-  //     return null;
-  //   }
-  // }
 }

@@ -1,26 +1,24 @@
 import 'package:dimple/chatbot/view/chatbot_screen.dart';
+import 'package:dimple/common/const/api_keys.dart';
 import 'package:dimple/common/view/root_tab.dart';
 import 'package:dimple/common/view_model/go_router.dart';
-import 'package:dimple/user/view/dog_register_screen1.dart';
+import 'package:dimple/register/view/dog_register_screen1.dart';
 import 'package:dimple/user/view/login_screen.dart';
-import 'package:dimple/user/view/menstruation_detail_screen1.dart';
+import 'package:dimple/register/view/menstruation_detail_screen1.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:dimple/calendar/config/app_config.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/services.dart';
+import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 
 void main() async {
   await initializeDateFormatting();
 
   // 실제 서버 사용시
   // AppConfig.environment = Environment.production;
-  
-  // 목 서버 사용시
-  AppConfig.environment = Environment.mock;
-
+  KakaoSdk.init(nativeAppKey: ApiKeys.kakaoNativeAppKey,);
   WidgetsFlutterBinding.ensureInitialized();
   // 가로모드로 하게되면 심각한 overflow와 폰트, 깨짐. 모든 반은형으로 하기전까지 코드 필수.
   SystemChrome.setPreferredOrientations(([
@@ -30,6 +28,7 @@ void main() async {
 }
 
 class MyApp extends ConsumerWidget {
+
 
   const MyApp({super.key});
 
