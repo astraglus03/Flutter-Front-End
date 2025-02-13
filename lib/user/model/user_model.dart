@@ -1,4 +1,3 @@
-import 'package:dimple/common/utils/data_utils.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'user_model.g.dart';
@@ -19,7 +18,6 @@ class UserModelLoading extends UserModelBase {}
 class UserModel extends UserModelBase {
   final String email;
   final String name;
-  @JsonKey(name: 'profileImage')
   final String profileImage;
   final String provider;
 
@@ -46,24 +44,6 @@ class UserModel extends UserModelBase {
 
   factory UserModel.fromJson(Map<String, dynamic> json) => _$UserModelFromJson(json);
   Map<String, dynamic> toJson() => _$UserModelToJson(this);
-}
-
-@JsonSerializable()
-class SocialLoginResponse {
-  @JsonKey(name: 'redirectionUrl')
-  final String redirectionUrl;
-  @JsonKey(name: 'successUrl')
-  final String successUrl;
-  final String token;
-
-  SocialLoginResponse({
-    required this.redirectionUrl,
-    required this.successUrl,
-    required this.token,
-  });
-
-  factory SocialLoginResponse.fromJson(Map<String, dynamic> json) => _$SocialLoginResponseFromJson(json);
-  Map<String, dynamic> toJson() => _$SocialLoginResponseToJson(this);
 }
 
 @JsonSerializable()

@@ -68,7 +68,7 @@ class UserMeStateNotifier extends StateNotifier<UserModelBase?> {
 
       // 토큰 발급
       final resp = await authRepository.getToken(token);
-      
+
       // 토큰 저장 전 기존 토큰 삭제
       try {
         await storage.delete(key: ACCESS_TOKEN_KEY);
@@ -82,12 +82,12 @@ class UserMeStateNotifier extends StateNotifier<UserModelBase?> {
       }
 
       // 사용자 정보 조회
-      final userResp = await repository.getMe(resp.accessToken);
+      final userResp = await repository.getMe(token);
       state = userResp;
 
       // // 반려견 정보 조회
       // await ref.read(dogProvider.notifier).getDogs();
-      
+
       return userResp;
     } catch (e) {
       print('로그인 처리 실패: $e');

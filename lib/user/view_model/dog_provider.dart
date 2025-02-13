@@ -1,5 +1,5 @@
 import 'package:dimple/user/model/dog_model.dart';
-import 'package:dimple/user/repository/dog_repository.dart';
+import 'package:dimple/user/view_model/dog_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final dogProvider = StateNotifierProvider<DogStateNotifier, List<DogModel>?>((ref) {

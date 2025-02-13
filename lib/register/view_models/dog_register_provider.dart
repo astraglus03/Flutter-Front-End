@@ -1,5 +1,5 @@
 import 'package:dimple/user/model/dog_model.dart';
-import 'package:dimple/user/repository/dog_repository.dart';
+import 'package:dimple/user/view_model/dog_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final dogRegisterProvider = StateNotifierProvider<DogRegisterNotifier, DogModel?>((ref) {
@@ -14,6 +14,7 @@ class DogRegisterNotifier extends StateNotifier<DogModel?> {
     required this.repository,
   }) : super(null);
 
+  // screen 1
   void saveBasicInfo({
     required String? image,
     required String name,
@@ -23,7 +24,7 @@ class DogRegisterNotifier extends StateNotifier<DogModel?> {
     required bool isNeutered,
     required String breed,
   }) {
-    state = state!.copyWith(
+    state = DogModel(
       image: image,
       name: name,
       age: age,
@@ -31,6 +32,12 @@ class DogRegisterNotifier extends StateNotifier<DogModel?> {
       gender: gender,
       isNeutered: isNeutered,
       breed: breed,
+      height: 0,  // 임시값, screen2에서 업데이트됨
+      legLength: 0,  // 임시값, screen2에서 업데이트됨
+      bloodType: '',  // 임시값, screen2에서 업데이트됨
+      registrationNumber: '',  // 임시값, screen2에서 업데이트됨
+      recentCheckupDate: DateTime.now(),  // 임시값, 나중에 업데이트됨
+      heartwormVaccinationDate: DateTime.now(),  // 임시값, 나중에 업데이트됨
     );
   }
 
@@ -107,16 +114,41 @@ class DogRegisterNotifier extends StateNotifier<DogModel?> {
   }
 
   // 강아지 등록 및 루트 탭으로 이동
-  Future<DogModel?> registerDog() async {
-    if (state == null) return null;
+  Future<DogModel> registerDog() async {
+    if (state == null) {
+      throw Exception('등록할 강아지 정보가 없습니다.');
+    }
 
     try {
+      // 이미지가 null인 경우 기본 이미지로 설정
+      if (state!.image == null) {
+        state = state!.copyWith(
+          image: 'assets/img/banreou.png',
+        );
+      }
+
+      print('등록할 강아지 정보:');
+      print('breed: ${state!.breed}');
+      print('isNeutered: ${state!.isNeutered}');
+      print('gender: ${state!.gender}');
+      print('id: ${state!.id}');
+      print('height: ${state!.height}');
+      print('bloodType: ${state!.bloodType}');
+      print('name: ${state!.name}');
+      print('image: ${state!.image}');
+      print('recentCheckupDate: ${state!.recentCheckupDate}');
+      print('legLength: ${state!.legLength}');
+      print('age: ${state!.age}');
+      print('menstruationCycle: ${state!.menstruationCycle}');
+      print('menstruationDuration: ${state!.menstruationDuration}');
+      print('menstruationStartDate: ${state!.menstruationStartDate}');
+
       final dog = await repository.createDog(dog: state!);
       state = dog;
       return dog;
     } catch (e) {
       print('강아지 등록 실패: $e');
-      return null;
+      throw Exception('등록 실패: $e');
     }
   }
 

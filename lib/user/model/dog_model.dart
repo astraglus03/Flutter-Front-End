@@ -13,20 +13,14 @@ class DogModel {
   @JsonKey(name: 'puppySpecies')
   final String breed;
   final int height;
-  @JsonKey(name: 'legLength')
   final int legLength;
-  @JsonKey(name: 'bloodType')
   final String bloodType;
-  @JsonKey(name: 'registrationNumber')
   final String registrationNumber;
   final DateTime recentCheckupDate;
   final DateTime heartwormVaccinationDate;
   final String? image;
-  @JsonKey(name: 'menstruationStartDate')
   final DateTime? menstruationStartDate;
-  @JsonKey(name: 'menstruationCycle')
   final int? menstruationCycle;
-  @JsonKey(name: 'menstruationDuration')
   final int? menstruationDuration;
 
   DogModel({

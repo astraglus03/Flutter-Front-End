@@ -1,25 +1,40 @@
 import 'package:dimple/common/component/submit_button.dart';
-import 'package:dimple/common/const/colors.dart';
-import 'package:dimple/common/view_model/go_router.dart';
 import 'package:dimple/register/view/menstruation_detail_screen2.dart';
-import 'package:dimple/user/view_model/menstruation_provider.dart';
+import 'package:dimple/register/view_models/dog_register_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-final focusedDayProvider = StateProvider<DateTime>((ref) => DateTime.now());
-
-class MenstruationDetailScreen1 extends ConsumerWidget {
-  static String get routeName => '/menstruation1';
+class MenstruationDetailScreen1 extends ConsumerStatefulWidget {
+  static String get routeName => '/menstruation-detail1';
 
   const MenstruationDetailScreen1({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final menstruationInfo = ref.watch(menstruationProvider);
-    final focusedDay = ref.watch(focusedDayProvider);
+  ConsumerState<MenstruationDetailScreen1> createState() =>
+      _MenstruationDetailScreen1State();
+}
 
+class _MenstruationDetailScreen1State
+    extends ConsumerState<MenstruationDetailScreen1> {
+  
+  DateTime selectedDate = DateTime.now();
+  DateTime focusedDay = DateTime.now();
+
+  void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
+    setState(() {
+      selectedDate = selectedDay;
+      this.focusedDay = focusedDay; // 선택한 날짜의 달을 유지
+    });
+
+    ref.read(dogRegisterProvider.notifier).saveMenstruationStartDate(
+      menstruationStartDate: selectedDay,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -56,17 +71,13 @@ class MenstruationDetailScreen1 extends ConsumerWidget {
                       lastDay: DateTime.now(),
                       focusedDay: focusedDay,
                       calendarFormat: CalendarFormat.month,
-                      selectedDayPredicate: (day) {
-                        return menstruationInfo.lastPeriodStartDate != null &&
-                            isSameDay(
-                                menstruationInfo.lastPeriodStartDate!, day);
-                      },
-                      onDaySelected: (selectedDay, focusedDay) {
-                        ref
-                            .read(menstruationProvider.notifier)
-                            .setLastPeriodStartDate(selectedDay);
-                        ref.read(focusedDayProvider.notifier).state =
-                            focusedDay;
+                      selectedDayPredicate: (day) => isSameDay(selectedDate, day),
+                      onDaySelected: _onDaySelected,
+                      onPageChanged: (focusedDay) {
+                        // 페이지가 변경될 때 focusedDay 업데이트
+                        setState(() {
+                          this.focusedDay = focusedDay;
+                        });
                       },
                       headerStyle: const HeaderStyle(
                         formatButtonVisible: false,
@@ -177,13 +188,16 @@ class MenstruationDetailScreen1 extends ConsumerWidget {
               const Spacer(),
               Center(
                 child: SubmitButton(
-                  text: '다음',
-                  onPressed: menstruationInfo.lastPeriodStartDate != null
-                      ? () {
-                          context.goNamed(MenstruationDetailScreen2.routeName);
-                        }
-                      : null,
-                ),
+                    text: '다음',
+                    onPressed: () {
+                      if (selectedDate != null) {
+                        context.goNamed(MenstruationDetailScreen2.routeName);
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('날짜를 선택해주세요')),
+                        );
+                      }
+                    }),
               ),
             ],
           ),

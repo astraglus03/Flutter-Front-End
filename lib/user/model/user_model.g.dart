@@ -20,21 +20,6 @@ Map<String, dynamic> _$UserModelToJson(UserModel instance) => <String, dynamic>{
       'provider': instance.provider,
     };
 
-SocialLoginResponse _$SocialLoginResponseFromJson(Map<String, dynamic> json) =>
-    SocialLoginResponse(
-      redirectionUrl: json['redirectionUrl'] as String,
-      successUrl: json['successUrl'] as String,
-      token: json['token'] as String,
-    );
-
-Map<String, dynamic> _$SocialLoginResponseToJson(
-        SocialLoginResponse instance) =>
-    <String, dynamic>{
-      'redirectionUrl': instance.redirectionUrl,
-      'successUrl': instance.successUrl,
-      'token': instance.token,
-    };
-
 LogoutResponse _$LogoutResponseFromJson(Map<String, dynamic> json) =>
     LogoutResponse(
       message: json['message'] as String,

@@ -93,17 +93,17 @@ class AuthProvider extends ChangeNotifier {
       builder: (_, __) => DogRegisterScreen2(),
     ),
     GoRoute(
-      path: '/menstruation1',
+      path: '/menstruation-detail1',
       name: MenstruationDetailScreen1.routeName,
       builder: (_, __) => MenstruationDetailScreen1(),
     ),
     GoRoute(
-      path: '/menstruation2',
+      path: '/menstruation-detail2',
       name: MenstruationDetailScreen2.routeName,
       builder: (_, __) => MenstruationDetailScreen2(),
     ),
     GoRoute(
-      path: '/menstruation3',
+      path: '//menstruation-detail3',
       name: MenstruationDetailScreen3.routeName,
       builder: (_, __) => MenstruationDetailScreen3(),
     ),
@@ -150,30 +150,36 @@ class AuthProvider extends ChangeNotifier {
           // 반려견 정보가 있으면 홈으로
           return '/';
         } catch (e) {
-          print('Dog provider error: $e');
+          print('강아지 프로바이어 error: $e');
           return '/dog-register1';
         }
       }
 
       // 강아지 등록 플로우 중에는 리다이렉트 하지 않음
       if (currentPath.startsWith('/dog-register') ||
-          currentPath.startsWith('/menstruation')) {
+          currentPath.startsWith('/menstruation') ||
+          currentPath == '/recentCheck' ||
+          currentPath == '/heartWormCheck') {
         return null;
       }
 
       try {
         final dogs = ref.read(dogProvider);
-        // 반려견 정보가 없으면 등록 화면으로
-        if (dogs == null || dogs.isEmpty) {
-          return currentPath == '/dog-register1' ? null : '/dog-register1';
+        // 반려견 정보가 없고 등록 플로우 중이 아닐 때만 등록 화면으로
+        if ((dogs == null || dogs.isEmpty) &&
+            !currentPath.startsWith('/dog-register') &&
+            !currentPath.startsWith('/menstruation') &&
+            currentPath != '/recentCheck' &&
+            currentPath != '/heartWormCheck') {
+          return '/dog-register1';
         }
 
-        // 로그인 화면이나 강아지 등록 화면에 있으면 홈으로
-        if (currentPath == '/login' || currentPath == '/dog-register1') {
+        // 로그인 화면에 있으면 홈으로
+        if (currentPath == '/login') {
           return '/';
         }
       } catch (e) {
-        print('Dog provider error: $e');
+        print('강아지 프로바이더 error: $e');
         return currentPath == '/dog-register1' ? null : '/dog-register1';
       }
 

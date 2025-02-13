@@ -1,22 +1,37 @@
 import 'package:dimple/common/component/submit_button.dart';
 import 'package:dimple/register/view/heart_worm_check_screen.dart';
-import 'package:dimple/register/view/menstruation_detail_screen2.dart';
-import 'package:dimple/user/view_model/menstruation_provider.dart';
+import 'package:dimple/register/view_models/dog_register_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-final focusedDayProvider = StateProvider<DateTime>((ref) => DateTime.now());
-
-class RecentCheckScreen extends ConsumerWidget {
+class RecentCheckScreen extends ConsumerStatefulWidget {
   static String get routeName => '/recentCheck';
+
   const RecentCheckScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final focusedDay = ref.watch(focusedDayProvider);
+  ConsumerState<RecentCheckScreen> createState() => _RecentCheckScreenState();
+}
 
+class _RecentCheckScreenState extends ConsumerState<RecentCheckScreen> {
+  DateTime selectedDate = DateTime.now();
+  DateTime focusedDay = DateTime.now();
+
+  void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
+    setState(() {
+      selectedDate = selectedDay;
+      this.focusedDay = focusedDay; // 선택한 날짜의 달을 유지
+    });
+
+    ref.read(dogRegisterProvider.notifier).saveHealthCheckDate(
+          recentCheckupDate: selectedDay,
+        );
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -25,9 +40,11 @@ class RecentCheckScreen extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const SizedBox(height: 50,),
+              const SizedBox(
+                height: 50,
+              ),
               const Text(
-                '가장 최근 검진 \n날짜가 언제인가요?',
+                '마지막 검진 일자가\n 언제인가요?',
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -46,19 +63,19 @@ class RecentCheckScreen extends ConsumerWidget {
                 child: Column(
                   children: [
                     TableCalendar(
-                      locale:'ko_KR',
+                      locale: 'ko_KR',
                       firstDay: DateTime.utc(2010, 1, 1),
                       lastDay: DateTime.now(),
                       focusedDay: focusedDay,
                       calendarFormat: CalendarFormat.month,
-                      // selectedDayPredicate: (day) {
-                      //   return menstruationInfo.lastPeriodStartDate != null &&
-                      //       isSameDay(menstruationInfo.lastPeriodStartDate!, day);
-                      // },
-                      onDaySelected: (selectedDay, focusedDay) {
-                        ref.read(menstruationProvider.notifier)
-                            .setLastPeriodStartDate(selectedDay);
-                        ref.read(focusedDayProvider.notifier).state = focusedDay;
+                      selectedDayPredicate: (day) =>
+                          isSameDay(selectedDate, day),
+                      onDaySelected: _onDaySelected,
+                      onPageChanged: (focusedDay) {
+                        // 페이지가 변경될 때 focusedDay 업데이트
+                        setState(() {
+                          this.focusedDay = focusedDay;
+                        });
                       },
                       headerStyle: const HeaderStyle(
                         formatButtonVisible: false,
@@ -169,20 +186,10 @@ class RecentCheckScreen extends ConsumerWidget {
               const Spacer(),
               Center(
                 child: SubmitButton(
-                  text: '완료',
-                  // onPressed: menstruationInfo.lastPeriodStartDate != null
-                  //     ? () {
-                  //   Navigator.of(context).push(
-                  //     MaterialPageRoute(
-                  //       builder: (_) => const MenstruationDetailScreen2(),
-                  //     ),
-                  //   );
-                  // }
-                  //     : null,
-                  onPressed: (){
-                    context.goNamed(HeartWormCheckScreen.routeName);
-                  },
-                ),
+                    text: '다음',
+                    onPressed: () {
+                      context.goNamed(HeartWormCheckScreen.routeName);
+                    }),
               ),
             ],
           ),
@@ -191,4 +198,3 @@ class RecentCheckScreen extends ConsumerWidget {
     );
   }
 }
-

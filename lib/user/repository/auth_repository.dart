@@ -57,6 +57,7 @@ class AuthRepository {
         'token': kakaoAuthCode,
       },
     );
+    print(resp.data);
     return LoginResponse.fromJson(resp.data);
   }
 
